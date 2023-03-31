@@ -33,7 +33,7 @@ const Header: FC = () => {
         })}
         fluid
       >
-        <Link type="router" href={RoutePath.Gallery}>
+        <Link type="router" href={RoutePath.Home}>
           <LogoImage />
         </Link>
         <Link type="router" href={RoutePath.MyImages}>

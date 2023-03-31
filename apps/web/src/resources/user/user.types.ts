@@ -3,6 +3,8 @@ interface Image {
   imageUrl: string;
   title: string;
   description: string;
+  author: string;
+  userId: string;
 }
 
 export interface User {

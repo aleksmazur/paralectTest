@@ -1,41 +1,21 @@
-import { useState } from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
 import {
-  Select,
-  TextInput,
-  Group,
   Title,
   Stack,
   Skeleton,
   Text,
   Container,
-  UnstyledButton,
-  SelectItem,
   Box,
   Image,
   Grid,
 } from '@mantine/core';
-import { IconSearch, IconX, IconSelector } from '@tabler/icons-react';
 
 import { accountApi } from 'resources/account';
 import { RoutePath } from 'routes';
 import { Link } from 'components';
 
-const selectOptions: SelectItem[] = [
-  {
-    value: 'newest',
-    label: 'Newest',
-  },
-  {
-    value: 'oldest',
-    label: 'Oldest',
-  },
-];
-
 const MyImages: NextPage = () => {
-  const [search, setSearch] = useState('');
-
   const { data: account, isLoading: isListLoading } = accountApi.useGet();
 
   return (
@@ -58,9 +38,9 @@ const MyImages: NextPage = () => {
             ))}
           </>
         )}
-        {account?.usersImages?.length ? (
+        {account?.usersImages?.filter((el) => el.userId === account._id).length ? (
           <Grid>
-            {account?.usersImages?.map((el) => (
+            {account?.usersImages?.filter((el) => el.userId === account._id).map((el) => (
               <Grid.Col span={3} key={el._id}>
                 <Box maw={240} mx="auto">
                   <Title order={4} align="center">{el.title}</Title>

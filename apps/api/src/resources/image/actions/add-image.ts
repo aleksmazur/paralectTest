@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { promiseUtil } from 'utils';
 
 import { analyticsService } from 'services';
 import { validateMiddleware } from 'middlewares';
-import { AppKoaContext, AppRouter, Next } from 'types';
+import { AppKoaContext, AppRouter } from 'types';
 import { imageService, Image } from 'resources/image';
 import { userService } from 'resources/user';
 
@@ -16,16 +17,6 @@ const schema = z.object({
 
 interface ValidatedData extends z.infer<typeof schema> {
   image: Image;
-}
-
-async function validator(ctx: AppKoaContext, next: Next) {
-  const { file } = ctx.request;
-  
-  ctx.assertClientError(file, {
-    global: 'File cannot be empty',
-  });
-  
-  await next();
 }
 
 async function handler(ctx: AppKoaContext<ValidatedData>) {
@@ -49,17 +40,27 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   analyticsService.track('New image added', {
     title,
   });
-  const { user } = ctx.state;
   
-  const updatedUser = await userService.updateOne(
-    { _id: user._id },
-    () => ({ usersImages: [...user.usersImages, image] }),
+  const { results: images } = await imageService.find({}, {
+    page: 1,
+    perPage: 20,
+  });
+
+  const userIds = await userService.distinct('_id', {
+    isEmailVerified: true,
+  });
+
+  const updateFn = (userId: string) => userService.atomic.updateOne(
+    { _id: userId },
+    { $set: { usersImages: images } },
   );
 
+  await promiseUtil.promiseLimit(userIds, 50, updateFn);
+
   ctx.body = imageService.getPublic(image);
-  ctx.body = userService.getPublic(updatedUser);
+  ctx.redirect('/my-images');
 }
 
 export default (router: AppRouter) => {
-  router.post('/add-image', validateMiddleware(schema), validator, handler);
+  router.post('/', validateMiddleware(schema), handler);
 };

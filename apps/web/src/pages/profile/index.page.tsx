@@ -113,9 +113,6 @@ const Profile: NextPage = () => {
               error={errors.password?.message}
             />
           </Stack>
-          <Stack>
-            {account?.usersImages?.length}
-          </Stack>
           <Button
             type="submit"
             loading={isUpdateLoading}

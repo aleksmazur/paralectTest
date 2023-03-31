@@ -6,7 +6,7 @@ const imageSchema = z.object({
   title: z.string(),
   description: z.string(),
   userId: z.string(),
-  author: z.string(),
+  author: z.string().optional(),
 });
 
 const schema = z.object({

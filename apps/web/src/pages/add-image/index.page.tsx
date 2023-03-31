@@ -13,19 +13,26 @@ import {
 
 import { handleError } from 'utils';
 
-import { imageApi } from 'resources/image';
-import queryClient from 'query-client';
 import { showNotification } from '@mantine/notifications';
+import { useQueryClient } from 'react-query';
+import { imageApi } from 'resources/image';
+import { accountApi } from 'resources/account';
 
 const schema = z.object({
   title: z.string().min(1, 'Please enter Title').max(100),
   description: z.string().min(1, 'Please enter Description').max(100),
   imageUrl: z.string().min(1, 'Please enter image url'),
+  userId: z.string(),
+  author: z.string(),
 });
 
 type ImageParams = z.infer<typeof schema>;
 
 const AddImage: NextPage = () => {
+  const queryClient = useQueryClient();
+
+  const { data: account } = accountApi.useGet();
+
   const {
     register,
     handleSubmit,
@@ -33,12 +40,20 @@ const AddImage: NextPage = () => {
     formState: { errors },
   } = useForm<ImageParams>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      userId: account?._id,
+      author: account?.fullName,
+    },
   });
 
-  const { mutate: addImage, isLoading: isImageAddLoading } = imageApi.useAddImage<ImageParams>();
+  const {
+    mutate: addImage,
+    isLoading: isUpdateLoading,
+  } = imageApi.useAddImage<ImageParams>();
 
-  const onSubmit = (dataImage: ImageParams) => addImage(dataImage, {
-    onSuccess: () => {
+  const onSubmit = (submitData: ImageParams) => addImage(submitData, {
+    onSuccess: (data) => {
+      queryClient.setQueryData(['currentUser'], data);
       showNotification({
         title: 'Success',
         message: 'Your image has been successfully added.',
@@ -82,7 +97,7 @@ const AddImage: NextPage = () => {
               </Stack>
               <Button
                 type="submit"
-                loading={isImageAddLoading}
+                loading={isUpdateLoading}
                 fullWidth
                 mt={34}
               >

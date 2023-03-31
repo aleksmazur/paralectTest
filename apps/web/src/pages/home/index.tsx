@@ -48,7 +48,7 @@ const selectOptions: SelectItem[] = [
   },
 ];
 
-const PER_PAGE = 5;
+const PER_PAGE = 50;
 
 const Gallery: NextPage = () => {
   const [search, setSearch] = useState('');

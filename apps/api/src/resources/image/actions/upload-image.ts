@@ -13,9 +13,6 @@ const imageSchema = z.object({
 });
 
 const schema = z.object({
-  firstName: z.string().min(1, 'Please enter First name').max(100),
-  lastName: z.string().min(1, 'Please enter Last name').max(100),
-  email: z.string().min(1, 'Please enter email').email('Email format is incorrect.'),
   usersImages: z.array(imageSchema).optional(),
 });
 
@@ -35,11 +32,11 @@ async function validator(ctx: AppKoaContext<ValidatedData, Request>, next: Next)
 }
 
 async function handler(ctx: AppKoaContext<ValidatedData, Request>) {
-  const { firstName, lastName, email, usersImages } = ctx.validatedData;
+  const { usersImages } = ctx.validatedData;
 
   const updatedUser = await userService.updateOne(
     { _id: ctx.request.params?.id },
-    () => ({ firstName, lastName, email, usersImages }),
+    () => ({ usersImages }),
   );
 
   ctx.body = userService.getPublic(updatedUser);
