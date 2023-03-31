@@ -36,6 +36,9 @@ const Header: FC = () => {
         <Link type="router" href={RoutePath.Gallery}>
           <LogoImage />
         </Link>
+        <Link type="router" href={RoutePath.MyImages}>
+          My images
+        </Link>
         <Link type="router" href={RoutePath.AddImage}>
           Add Image
         </Link>

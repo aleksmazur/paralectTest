@@ -18,13 +18,9 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch, IconX, IconSelector } from '@tabler/icons-react';
-import { ColumnDef, RowSelectionState, SortingState } from '@tanstack/react-table';
-
-import { Table } from 'components';
-
-import { imageTypes, imageApi } from 'resources/image';
 
 import { DatePickerInput, DatesRangeValue } from '@mantine/dates';
+import { imageApi } from 'resources/image';
 
 interface ImagesListParams {
   page?: number;
@@ -52,30 +48,10 @@ const selectOptions: SelectItem[] = [
   },
 ];
 
-const columns: ColumnDef<imageTypes.Image>[] = [
-  {
-    accessorKey: 'title',
-    header: 'Title',
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: 'imageUrl',
-    header: 'Images',
-    cell: (info) => info.getValue(),
-  },
-];
-
-const PER_PAGE = 5;
+const PER_PAGE = 50;
 
 const Gallery: NextPage = () => {
   const [search, setSearch] = useState('');
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [sortBy, setSortBy] = useState(selectOptions[0].value);
   const [filterDate, setFilterDate] = useState<DatesRangeValue>();
 
@@ -210,9 +186,9 @@ const Gallery: NextPage = () => {
         {data?.items.length ? (
           <Grid>
             {data?.items.map((el) => (
-              <Grid.Col span={4}>
-                <Box maw={240} mx="auto" key={el._id}>
-                  <Title order={4}>{el.title}</Title>
+              <Grid.Col span={3} key={el._id}>
+                <Box maw={240} mx="auto">
+                  <Title order={4} align="center">{el.title}</Title>
                   <Image
                     radius="md"
                     src={el.imageUrl}

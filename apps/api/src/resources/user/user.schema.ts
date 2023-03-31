@@ -5,6 +5,8 @@ const imageSchema = z.object({
   imageUrl: z.string(),
   title: z.string(),
   description: z.string(),
+  userId: z.string(),
+  author: z.string(),
 });
 
 const schema = z.object({
@@ -25,7 +27,7 @@ const schema = z.object({
   oauth: z.object({
     google: z.boolean().default(false),
   }).optional(),
-  usersImages: z.array(imageSchema),
+  usersImages: z.array(imageSchema).optional(),
 }).strict();
 
 export default schema;

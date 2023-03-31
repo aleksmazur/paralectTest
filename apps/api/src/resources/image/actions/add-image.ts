@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 import { analyticsService } from 'services';
 import { validateMiddleware } from 'middlewares';
-import { AppKoaContext, AppRouter } from 'types';
+import { AppKoaContext, AppRouter, Next } from 'types';
 import { imageService, Image } from 'resources/image';
+import { userService } from 'resources/user';
 
 const schema = z.object({
   title: z.string().min(1, 'Please enter Title').max(100),
@@ -16,14 +17,18 @@ const schema = z.object({
 interface ValidatedData extends z.infer<typeof schema> {
   image: Image;
 }
-type Request = {
-  params: {
-    id: string;
-    fullName: string;
-  }
-};
 
-async function handler(ctx: AppKoaContext<ValidatedData, Request>) {
+async function validator(ctx: AppKoaContext, next: Next) {
+  const { file } = ctx.request;
+  
+  ctx.assertClientError(file, {
+    global: 'File cannot be empty',
+  });
+  
+  await next();
+}
+
+async function handler(ctx: AppKoaContext<ValidatedData>) {
   console.log(ctx.validatedData);
   const {
     title,
@@ -35,8 +40,8 @@ async function handler(ctx: AppKoaContext<ValidatedData, Request>) {
     title,
     description,
     imageUrl,
-    userId: ctx.request.params?.id,
-    author: ctx.request.params?.fullName,
+    userId: ctx.state.user._id,
+    author: ctx.state.user.fullName,
   });
 
   console.log(image);
@@ -44,10 +49,17 @@ async function handler(ctx: AppKoaContext<ValidatedData, Request>) {
   analyticsService.track('New image added', {
     title,
   });
+  const { user } = ctx.state;
+  
+  const updatedUser = await userService.updateOne(
+    { _id: user._id },
+    () => ({ usersImages: [...user.usersImages, image] }),
+  );
 
   ctx.body = imageService.getPublic(image);
+  ctx.body = userService.getPublic(updatedUser);
 }
 
 export default (router: AppRouter) => {
-  router.post('/images', validateMiddleware(schema), handler);
+  router.post('/add-image', validateMiddleware(schema), validator, handler);
 };

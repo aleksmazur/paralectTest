@@ -18,24 +18,30 @@ export function useList<T>(params: T) {
   return useQuery<ImagesListResponse>(['images', params], list);
 }
 
-export function useAddImage<T>() {
-  const add = (data: T) => apiService.post('/images', data);
+export function useMyList<T>(params: T) {
+  const list = () => apiService.get('/images/current', params);
 
-  return useMutation<imageTypes.Image, unknown, T>(add, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(['image'], data);
-    },
-  });
+  interface ImagesListResponse {
+    count: number;
+    items: Image[];
+    totalPages: number;
+  }
+
+  return useQuery<ImagesListResponse>(['images', params], list);
 }
 
 // export function useAddImage<T>() {
-//   const addImage = (data: T) => apiService.post('/images/add-image', data);
+//   const add = (data: T) => apiService.post('/images', data);
 
-//   interface AddImageResponse {
-//     title: string;
-//     description: string;
-//     imageUrl: string;
-//   }
-
-//   return useMutation<AddImageResponse, unknown, T>(addImage);
+//   return useMutation<imageTypes.Image, unknown, T>(add, {
+//     onSuccess: (data) => {
+//       queryClient.setQueryData(['image'], data);
+//     },
+//   });
 // }
+
+export function useAddImage<T>() {
+  const addImage = (data: T) => apiService.post('/images/add-image', data);
+
+  return useMutation<{}, unknown, T>(addImage);
+}

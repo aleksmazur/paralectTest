@@ -1,9 +1,10 @@
 import { FC, ReactElement } from 'react';
+import { Link } from 'components';
+import { RoutePath } from 'routes';
 
 import {
-  SimpleGrid,
-  Image,
-  MediaQuery,
+  Button,
+  SimpleGrid, Title,
 } from '@mantine/core';
 
 import { useStyles } from './styles';
@@ -16,22 +17,26 @@ const UnauthorizedLayout: FC<UnauthorizedLayoutProps> = ({ children }) => {
   const { classes } = useStyles();
   return (
     <SimpleGrid
-      cols={2}
+      cols={1}
       breakpoints={[
         { maxWidth: 'sm', cols: 1, spacing: 'sm' },
       ]}
     >
-      <MediaQuery
-        smallerThan="sm"
-        styles={{ display: 'none' }}
-      >
-        <Image
-          alt="app info"
-          src="../images/ship.svg"
-          height="100vh"
-        />
-      </MediaQuery>
-
+      <div className={classes.wrapper}>
+        <main className={classes.content}>
+          <Title order={1}>
+            {window.location.pathname === '/sign-in/' ? (
+              <Link type="router" href={RoutePath.Gallery}>
+                Gallery
+              </Link>
+            ) : (
+              <Link type="router" href={RoutePath.SignIn}>
+                Sign In
+              </Link>
+            )}
+          </Title>
+        </main>
+      </div>
       <div className={classes.wrapper}>
         <main className={classes.content}>
           {children}

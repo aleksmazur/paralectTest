@@ -4,7 +4,7 @@ import list from './actions/list';
 import addImage from './actions/add-image';
 
 const publicRoutes = routeUtil.getRoutes([
-
+  list,
 ]);
 
 const privateRoutes = routeUtil.getRoutes([

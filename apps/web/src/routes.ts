@@ -12,8 +12,8 @@ export enum RoutePath {
   // Private paths
   Home = '/',
   Profile = '/profile',
+  MyImages = '/my-images',
   AddImage = '/add-image',
-  Gallery = '/gallery',
 
   // Auth paths
   SignIn = '/sign-in',
@@ -21,6 +21,7 @@ export enum RoutePath {
   ForgotPassword = '/forgot-password',
   ResetPassword = '/reset-password',
   ExpireToken = '/expire-token',
+  Gallery = '/gallery',
 
   NotFound = '/404',
 }
@@ -46,7 +47,7 @@ export const routesConfiguration: RoutesConfiguration = {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },
-  [RoutePath.Gallery]: {
+  [RoutePath.MyImages]: {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },
@@ -69,6 +70,11 @@ export const routesConfiguration: RoutesConfiguration = {
     layout: LayoutType.UNAUTHORIZED,
   },
   [RoutePath.ExpireToken]: {
+    scope: ScopeType.PUBLIC,
+    layout: LayoutType.UNAUTHORIZED,
+  },
+
+  [RoutePath.Gallery]: {
     scope: ScopeType.PUBLIC,
     layout: LayoutType.UNAUTHORIZED,
   },

@@ -54,12 +54,14 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   );
 
   ctx.body = {
-    items: images.results,
+    items: images.results.filter(el => el._id === ctx.state.user._id),
     totalPages: images.pagesCount,
     count: images.count,
   };
+
+  console.log(images.results);
 }
 
 export default (router: AppRouter) => {
-  router.get('/', validateMiddleware(schema), handler);
+  router.get('/images/current', validateMiddleware(schema), handler);
 };
