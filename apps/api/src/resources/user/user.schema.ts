@@ -7,6 +7,7 @@ const imageSchema = z.object({
   description: z.string(),
   userId: z.string(),
   author: z.string().optional(),
+  raiting: z.number().optional().default(0),
 });
 
 const schema = z.object({

@@ -3,7 +3,6 @@ import { Link } from 'components';
 import { RoutePath } from 'routes';
 
 import {
-  Button,
   SimpleGrid, Title,
 } from '@mantine/core';
 
@@ -25,8 +24,8 @@ const UnauthorizedLayout: FC<UnauthorizedLayoutProps> = ({ children }) => {
       <div className={classes.wrapper}>
         <main className={classes.content}>
           <Title order={1}>
-            {window.location.pathname === '/sign-in/' ? (
-              <Link type="router" href={RoutePath.Gallery}>
+            {window.location.pathname !== '/' ? (
+              <Link type="router" href={RoutePath.Home}>
                 Gallery
               </Link>
             ) : (

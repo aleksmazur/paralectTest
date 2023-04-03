@@ -33,3 +33,9 @@ export function useAddImage<T>() {
 
   return useMutation<{}, unknown, T>(addImage);
 }
+
+export function useUpdate<T>() {
+  const update = (data: T) => apiService.put('/images', data);
+
+  return useMutation<{}, unknown, T>(update);
+}

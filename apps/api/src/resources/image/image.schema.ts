@@ -11,6 +11,7 @@ const schema = z.object({
   userId: z.string(),
   imageUrl: z.string(),
   author: z.string(),
+  raiting: z.number().optional().default(0),
 }).strict();
 
 export default schema;

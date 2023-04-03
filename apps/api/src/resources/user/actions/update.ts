@@ -3,20 +3,11 @@ import { z } from 'zod';
 import { AppKoaContext, Next, AppRouter } from 'types';
 import { validateMiddleware } from 'middlewares';
 import { userService } from 'resources/user';
-const imageSchema = z.object({
-  _id: z.string(),
-  imageUrl: z.string(),
-  title: z.string(),
-  description: z.string(),
-  userId: z.string(),
-  author: z.string().optional(),
-});
 
 const schema = z.object({
   firstName: z.string().min(1, 'Please enter First name').max(100),
   lastName: z.string().min(1, 'Please enter Last name').max(100),
   email: z.string().min(1, 'Please enter email').email('Email format is incorrect.'),
-  usersImages: z.array(imageSchema).optional(),
 });
 
 type ValidatedData = z.infer<typeof schema>;
@@ -35,11 +26,11 @@ async function validator(ctx: AppKoaContext<ValidatedData, Request>, next: Next)
 }
 
 async function handler(ctx: AppKoaContext<ValidatedData, Request>) {
-  const { firstName, lastName, email, usersImages } = ctx.validatedData;
+  const { firstName, lastName, email } = ctx.validatedData;
 
   const updatedUser = await userService.updateOne(
     { _id: ctx.request.params?.id },
-    () => ({ firstName, lastName, email, usersImages }),
+    () => ({ firstName, lastName, email }),
   );
 
   ctx.body = userService.getPublic(updatedUser);

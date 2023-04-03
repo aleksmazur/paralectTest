@@ -14,10 +14,11 @@ import {
 import { accountApi } from 'resources/account';
 import { RoutePath } from 'routes';
 import { Link } from 'components';
+import { imageApi } from 'resources/image';
 
 const MyImages: NextPage = () => {
-  const { data: account, isLoading: isListLoading } = accountApi.useGet();
-
+  const { data: account, isLoading: isAccountLoading } = accountApi.useGet();
+  const { data: images, isLoading: isListLoading } = imageApi.useList({});
   return (
     <>
       <Head>
@@ -26,7 +27,7 @@ const MyImages: NextPage = () => {
       <Stack spacing="lg">
         <Title order={2}>My images</Title>
 
-        {isListLoading && (
+        {isListLoading && isAccountLoading && (
           <>
             {[1, 2, 3].map((item) => (
               <Skeleton
@@ -38,9 +39,9 @@ const MyImages: NextPage = () => {
             ))}
           </>
         )}
-        {account?.usersImages?.filter((el) => el.userId === account._id).length ? (
+        {images?.items.filter((el) => el.userId === account?._id).length ? (
           <Grid>
-            {account?.usersImages?.filter((el) => el.userId === account._id).map((el) => (
+            {images?.items?.filter((el) => el.userId === account?._id).map((el) => (
               <Grid.Col span={3} key={el._id}>
                 <Box maw={240} mx="auto">
                   <Title order={4} align="center">{el.title}</Title>
@@ -50,8 +51,8 @@ const MyImages: NextPage = () => {
                     alt={el.title}
                     caption={el.description}
                   />
+                  <Text>{el.raiting ? `${el.raiting} likes` : 'No likes :(' }</Text>
                 </Box>
-
               </Grid.Col>
             ))}
           </Grid>

@@ -9,4 +9,5 @@ export interface Image {
   userId?: string,
   imageUrl: string,
   author: string,
+  raiting?: number,
 }

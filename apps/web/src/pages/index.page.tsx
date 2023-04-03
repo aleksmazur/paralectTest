@@ -1,3 +1,3 @@
-import Home from 'pages/home';
+import Gallery from 'pages/home';
 
-export default Home;
+export default Gallery;

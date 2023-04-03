@@ -2,9 +2,11 @@ import { routeUtil } from 'utils';
 
 import list from './actions/list';
 import addImage from './actions/add-image';
+import update from './actions/update-raiting';
 
 const publicRoutes = routeUtil.getRoutes([
   list,
+  update,
 ]);
 
 const privateRoutes = routeUtil.getRoutes([

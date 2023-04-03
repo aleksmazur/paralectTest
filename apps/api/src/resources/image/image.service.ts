@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { securityUtil } from 'utils';
 
 import db from 'db';
 import { DATABASE_DOCUMENTS } from 'app.constants';

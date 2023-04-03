@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Head from 'next/head';
 import { NextPage } from 'next';
+import { RoutePath } from 'routes';
+import router from 'next/router';
 import {
   Button,
   Group,
@@ -59,6 +61,7 @@ const AddImage: NextPage = () => {
         message: 'Your image has been successfully added.',
         color: 'green',
       });
+      router.push(RoutePath.MyImages);
     },
     onError: (e) => handleError(e, setError),
   });

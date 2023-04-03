@@ -17,10 +17,11 @@ import {
   Grid,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { IconSearch, IconX, IconSelector } from '@tabler/icons-react';
-
+import { IconSearch, IconX, IconSelector, IconHeart } from '@tabler/icons-react';
 import { DatePickerInput, DatesRangeValue } from '@mantine/dates';
 import { imageApi } from 'resources/image';
+import { showNotification } from '@mantine/notifications';
+import { z } from 'zod';
 
 interface ImagesListParams {
   page?: number;
@@ -49,6 +50,13 @@ const selectOptions: SelectItem[] = [
 ];
 
 const PER_PAGE = 50;
+
+const schema = z.object({
+  _id: z.string(),
+  raiting: z.number(),
+});
+
+type UpdateRaiting = z.infer<typeof schema>;
 
 const Gallery: NextPage = () => {
   const [search, setSearch] = useState('');
@@ -88,6 +96,20 @@ const Gallery: NextPage = () => {
       }));
     }
   }, []);
+
+  const {
+    mutate: updateCurrent,
+  } = imageApi.useUpdate<UpdateRaiting>();
+
+  const handleLike = (submitData: UpdateRaiting) => updateCurrent(submitData, {
+    onSuccess: () => {
+      showNotification({
+        title: 'Success',
+        message: 'Your like added',
+        color: 'green',
+      });
+    },
+  });
 
   useLayoutEffect(() => {
     setParams((prev) => ({ ...prev, page: 1, searchValue: debouncedSearch, perPage: PER_PAGE }));
@@ -195,8 +217,13 @@ const Gallery: NextPage = () => {
                     alt={el.title}
                     caption={el.description}
                   />
+                  <Box sx={[{ display: 'flex', justifyContent: 'space-between' }]}>
+                    <Text>
+                      {`${el.raiting ? el.raiting : 'No one'} likes this photo`}
+                    </Text>
+                    <IconHeart color="red" cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! + 1 })} />
+                  </Box>
                 </Box>
-
               </Grid.Col>
             ))}
           </Grid>

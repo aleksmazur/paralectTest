@@ -1,53 +1,54 @@
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
 import Head from 'next/head';
+import router from 'next/router';
 import { NextPage } from 'next';
+
+import { RoutePath } from 'routes';
 import {
-  Button,
-  Group,
   Stack,
-  TextInput,
   Title,
+  Text,
+  Button,
 } from '@mantine/core';
 
-import { handleError } from 'utils';
+const NotFound: NextPage = () => {
+  const handleClick = useCallback(() => {
+    router.push(RoutePath.Home);
+  }, []);
 
-import { imageApi } from 'resources/image';
-import queryClient from 'query-client';
-import { showNotification } from '@mantine/notifications';
-
-const schema = z.object({
-  title: z.string().min(1, 'Please enter Title').max(100),
-  description: z.string().min(1, 'Please enter Description').max(100),
-  imageUrl: z.string().min(1, 'Please enter image url'),
-});
-
-type ImageParams = z.infer<typeof schema>;
-
-const AddImage: NextPage = () => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<ImageParams>({
-    resolver: zodResolver(schema),
-  });
-
-  const { mutate: useAddImage, isLoading: isImageAddLoading } = imageApi.useAddImage<ImageParams>();
-
-  const onSubmit = (dataImage: ImageParams) => useAddImage(dataImage, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(['currentUser'], data);
-      showNotification({
-        title: 'Success',
-        message: 'Your image has been successfully added.',
-        color: 'green',
-      });
-    },
-    onError: (e) => handleError(e, setError),
-  });
+  return (
+    <>
+      <Head>
+        <title>Page not found</title>
+      </Head>
+      <Stack sx={{
+        width: '328px',
+        height: '100vh',
+        display: 'flex',
+        margin: 'auto',
+        justifyContent: 'center',
+      }}
+      >
+        <Title order={2}>Oops! The page is not found.</Title>
+        <Text
+          component="p"
+          sx={(theme) => ({
+            color: theme.colors.gray[5],
+            margin: '20px 0 24px',
+          })}
+        >
+          The page you are looking for may have been removed,
+          or the link you followed may be broken.
+        </Text>
+        <Button
+          type="submit"
+          onClick={handleClick}
+        >
+          Go to homepage
+        </Button>
+      </Stack>
+    </>
+  );
 };
 
-export default AddImage;
+export default NotFound;

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { promiseUtil } from 'utils';
 import { userService } from 'resources/user';
 import { imageService } from 'resources/image';
@@ -11,7 +12,6 @@ migration.migrate = async () => {
     title: 'My each one image',
     description: 'Image made without love',
     userId: '642sdwd37cc14f2a336a874a8fd',
-    // eslint-disable-next-line max-len
     imageUrl: 'https://play-lh.googleusercontent.com/jkpabs01pnEU5Jc9U3MuWdwwoWi8v7x33RZNYyLP2T8a2j1csnjOy3_-KI6JU8JntlNW',
     author: 'Claude Monet',
   });
