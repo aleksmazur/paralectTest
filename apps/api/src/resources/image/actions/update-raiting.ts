@@ -5,7 +5,7 @@ import { validateMiddleware } from 'middlewares';
 import { imageService, Image } from 'resources/image';
 
 const schema = z.object({
-  id: z.string(),
+  _id: z.string(),
   raiting: z.number(),
 });
 
@@ -14,7 +14,7 @@ interface ValidatedData extends z.infer<typeof schema> {
 }
 
 async function validator(ctx: AppKoaContext<ValidatedData>, next: Next) {
-  const image = await imageService.findOne({ _id: ctx.validatedData.id });
+  const image = await imageService.findOne({ _id: ctx.validatedData._id });
   
   if (!image) return ctx.body = {};
   
@@ -27,7 +27,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   const updatedImage = await imageService.updateOne({
     _id: ctx.validatedData.image._id,
   }, () => ({
-    raiting: ctx.validatedData.image.raiting,
+    raiting: ctx.validatedData.image.raiting + 1,
   }));
 
   ctx.body = imageService.getPublic(updatedImage);

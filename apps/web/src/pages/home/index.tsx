@@ -64,7 +64,7 @@ const Gallery: NextPage = () => {
   const [filterDate, setFilterDate] = useState<DatesRangeValue>();
 
   const [params, setParams] = useState<ImagesListParams>({});
-
+  const [likes, setLike] = useState<string[]>([]);
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   const handleSort = useCallback((value: string) => {
@@ -108,6 +108,7 @@ const Gallery: NextPage = () => {
         message: 'Your like added',
         color: 'green',
       });
+      setLike([...likes, submitData._id]);
     },
   });
 
@@ -221,7 +222,7 @@ const Gallery: NextPage = () => {
                     <Text>
                       {`${el.raiting ? el.raiting : 'No one'} likes this photo`}
                     </Text>
-                    <IconHeart color="red" cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! + 1 })} />
+                    <IconHeart color={likes.find((like) => like === el._id) ? 'red' : 'gray'} cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! })} />
                   </Box>
                 </Box>
               </Grid.Col>
