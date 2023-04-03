@@ -28,7 +28,7 @@ interface ImagesListParams {
   perPage?: number;
   searchValue?: string;
   sort?: {
-    createdOn: 'asc' | 'desc';
+    raiting: 'asc' | 'desc';
   };
   filter?: {
     createdOn?: {
@@ -40,12 +40,12 @@ interface ImagesListParams {
 
 const selectOptions: SelectItem[] = [
   {
-    value: 'newest',
-    label: 'Newest',
+    value: 'popular',
+    label: 'The most popular',
   },
   {
-    value: 'oldest',
-    label: 'Oldest',
+    value: 'unpopular',
+    label: 'Not popular',
   },
 ];
 
@@ -71,7 +71,7 @@ const Gallery: NextPage = () => {
     setSortBy(value);
     setParams((prev) => ({
       ...prev,
-      sort: value === 'newest' ? { createdOn: 'desc' } : { createdOn: 'asc' },
+      sort: value === 'popular' ? { raiting: 'desc' } : { raiting: 'asc' },
     }));
   }, []);
 
