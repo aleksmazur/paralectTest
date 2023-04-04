@@ -36,12 +36,10 @@ const PhotoUpload = () => {
 
   const handlePhotoUpload = async ([imageFile]: FileWithPath[]) => {
     setErrorMessage(null);
-    console.log(imageFile);
 
     if (isFileFormatCorrect(imageFile) && isFileSizeCorrect(imageFile) && imageFile) {
       const body = new FormData();
       body.append('file', imageFile, imageFile.name);
-      console.log(body);
       await uploadProfilePhoto(body, {
         onError: (err) => handleError(err),
       });

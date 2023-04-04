@@ -1,9 +1,7 @@
 import { FC, ReactElement } from 'react';
-import { Link } from 'components';
-import { RoutePath } from 'routes';
 
 import {
-  SimpleGrid, Title,
+  SimpleGrid,
 } from '@mantine/core';
 
 import { useStyles } from './styles';
