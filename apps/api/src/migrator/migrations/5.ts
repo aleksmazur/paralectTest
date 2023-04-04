@@ -4,9 +4,11 @@ import { userService } from 'resources/user';
 import { imageService } from 'resources/image';
 import { Migration } from 'migrator/types';
 
-const migration = new Migration(4, 'Example');
+const migration = new Migration(5, 'Example');
 
 migration.migrate = async () => {
+  
+  await imageService.deleteMany({});
 
   await imageService.insertOne({
     title: 'My each one image',

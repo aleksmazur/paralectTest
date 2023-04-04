@@ -23,21 +23,6 @@ const UnauthorizedLayout: FC<UnauthorizedLayoutProps> = ({ children }) => {
     >
       <div className={classes.wrapper}>
         <main className={classes.content}>
-          <Title order={1}>
-            {window.location.pathname !== '/' ? (
-              <Link type="router" href={RoutePath.Home}>
-                Gallery
-              </Link>
-            ) : (
-              <Link type="router" href={RoutePath.SignIn}>
-                Sign In
-              </Link>
-            )}
-          </Title>
-        </main>
-      </div>
-      <div className={classes.wrapper}>
-        <main className={classes.content}>
           {children}
         </main>
       </div>

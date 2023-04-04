@@ -44,7 +44,7 @@ const NotFound: NextPage = () => {
           type="submit"
           onClick={handleClick}
         >
-          Go to homepage
+          Go to Gallary
         </Button>
       </Stack>
     </>

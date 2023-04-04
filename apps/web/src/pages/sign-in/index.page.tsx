@@ -7,6 +7,7 @@ import { TextInput, PasswordInput, Button, Group, Stack, Title, Alert } from '@m
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import { GoogleIcon } from 'public/icons';
+import router from 'next/router';
 
 import config from 'config';
 import { RoutePath } from 'routes';
@@ -14,6 +15,7 @@ import { handleError } from 'utils';
 import { Link } from 'components';
 
 import { accountApi } from 'resources/account';
+import { useCallback } from 'react';
 
 const schema = z.object({
   email: z.string().min(1, 'Please enter email').email('Email format is incorrect.'),
@@ -32,6 +34,10 @@ const SignIn: NextPage = () => {
   const onSubmit = (data: SignInParams) => signIn(data, {
     onError: (e) => handleError(e, setError),
   });
+
+  const handleClick = useCallback(() => {
+    router.push(RoutePath.Home);
+  }, []);
 
   return (
     <>
@@ -101,6 +107,13 @@ const SignIn: NextPage = () => {
               Sign up
             </Link>
           </Group>
+          <Button
+            type="submit"
+            color="gray"
+            onClick={handleClick}
+          >
+            Go to Gallary
+          </Button>
         </Stack>
       </Stack>
     </>

@@ -92,7 +92,6 @@ const Gallery: NextPage = () => {
           raiting: (prev.find((el) => el.id === submitData._id)?.raiting || 0) + 1 }]);
     },
   });
-  console.log(likes);
 
   useLayoutEffect(() => {
     setParams((prev) => ({ ...prev, page: 1, searchValue: debouncedSearch, perPage: PER_PAGE }));
@@ -184,7 +183,7 @@ const Gallery: NextPage = () => {
                   />
                   <Box sx={[{ display: 'flex', justifyContent: 'space-between' }]}>
                     <Text>
-                      {`${el.raiting ? (el.raiting + (likes.find((like) => like.id === el._id)?.raiting || 0)) : 'No one'} likes this photo`}
+                      {`Likes: ${el.raiting ? (el.raiting + (likes.find((like) => like.id === el._id)?.raiting || 0)) : (likes.find((like) => like.id === el._id)?.raiting || 0)}`}
                     </Text>
                     <IconHeart color={likes.find((like) => like.id === el._id) ? 'red' : 'gray'} cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! })} />
                   </Box>

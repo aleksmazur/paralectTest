@@ -4,23 +4,23 @@ import { userService } from 'resources/user';
 import { imageService } from 'resources/image';
 import { Migration } from 'migrator/types';
 
-const migration = new Migration(4, 'Example');
+const migration = new Migration(6, 'Example');
 
 migration.migrate = async () => {
-
+  
   await imageService.insertOne({
-    title: 'My each one image',
-    description: 'Image made without love',
-    userId: '642sdwd37cc14f2a336a874a8fd',
-    imageUrl: 'https://play-lh.googleusercontent.com/jkpabs01pnEU5Jc9U3MuWdwwoWi8v7x33RZNYyLP2T8a2j1csnjOy3_-KI6JU8JntlNW',
+    title: 'Humster',
+    description: 'Humster with nut',
+    userId: '642sdwd37cc14f2a346a874a8fd',
+    imageUrl: 'https://www.thesprucepets.com/thmb/93KCeFOyy9MViphsujDftH6MMdc=/4089x0/filters:no_upscale():strip_icc()/close-up-of-a-hamster-eating-groundnut-635096689-5c525f88c9e77c0001d7c1fa.jpg',
     author: 'Claude Monet',
   });
 
   await imageService.insertOne({
-    title: 'My image',
-    description: 'Image made with smile',
-    userId: '642sdwd37cc14f2a336a874a8fd',
-    imageUrl: 'https://bestlifeonline.com/wp-content/uploads/sites/3/2018/04/Animal-jokes-funny-sheep.jpg?quality=82&strip=all',
+    title: 'Bear',
+    description: 'Nice bear shake his hand',
+    userId: '642sdwd37cc14f2a236a874a8fd',
+    imageUrl: 'https://www.boredpanda.com/blog/wp-content/uploads/2014/03/funny-bears-doing-human-things-coverimage.jpg',
     author: 'Van Gogh',
   });
 

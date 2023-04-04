@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Head from 'next/head';
+import router from 'next/router';
 import { NextPage } from 'next';
 import {
   Button,
@@ -94,6 +95,10 @@ const SignUp: NextPage = () => {
     },
     onError: (e) => handleError(e, setError),
   });
+
+  const handleClick = useCallback(() => {
+    router.push(RoutePath.Home);
+  }, []);
 
   const label = (
     <SimpleGrid
@@ -215,6 +220,13 @@ const SignUp: NextPage = () => {
               Sign In
             </Link>
           </Group>
+          <Button
+            type="submit"
+            color="gray"
+            onClick={handleClick}
+          >
+            Go to Gallary
+          </Button>
         </Stack>
       </Stack>
     </>
