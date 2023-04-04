@@ -18,7 +18,6 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch, IconX, IconSelector, IconHeart } from '@tabler/icons-react';
-import { DatePickerInput, DatesRangeValue } from '@mantine/dates';
 import { imageApi } from 'resources/image';
 import { showNotification } from '@mantine/notifications';
 import { z } from 'zod';
@@ -30,12 +29,11 @@ interface ImagesListParams {
   sort?: {
     raiting: 'asc' | 'desc';
   };
-  filter?: {
-    createdOn?: {
-      sinceDate: Date | null;
-      dueDate: Date | null;
-    };
-  };
+}
+
+interface Likes {
+  id: string;
+  raiting: number;
 }
 
 const selectOptions: SelectItem[] = [
@@ -61,10 +59,9 @@ type UpdateRaiting = z.infer<typeof schema>;
 const Gallery: NextPage = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState(selectOptions[0].value);
-  const [filterDate, setFilterDate] = useState<DatesRangeValue>();
 
   const [params, setParams] = useState<ImagesListParams>({});
-  const [likes, setLike] = useState<string[]>([]);
+  const [likes, setLike] = useState<Likes[]>([]);
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   const handleSort = useCallback((value: string) => {
@@ -79,24 +76,6 @@ const Gallery: NextPage = () => {
     setSearch(event.target.value);
   }, []);
 
-  const handleFilter = useCallback(([sinceDate, dueDate]: DatesRangeValue) => {
-    setFilterDate([sinceDate, dueDate]);
-
-    if (!sinceDate) {
-      setParams((prev) => ({
-        ...prev,
-        filter: {},
-      }));
-    }
-
-    if (dueDate) {
-      setParams((prev) => ({
-        ...prev,
-        filter: { createdOn: { sinceDate, dueDate } },
-      }));
-    }
-  }, []);
-
   const {
     mutate: updateCurrent,
   } = imageApi.useUpdate<UpdateRaiting>();
@@ -108,9 +87,12 @@ const Gallery: NextPage = () => {
         message: 'Your like added',
         color: 'green',
       });
-      setLike([...likes, submitData._id]);
+      setLike((prev) => [
+        { id: submitData._id,
+          raiting: (prev.find((el) => el.id === submitData._id)?.raiting || 0) + 1 }]);
     },
   });
+  console.log(likes);
 
   useLayoutEffect(() => {
     setParams((prev) => ({ ...prev, page: 1, searchValue: debouncedSearch, perPage: PER_PAGE }));
@@ -174,26 +156,8 @@ const Gallery: NextPage = () => {
                 sx={{ width: '200px' }}
               />
             </Skeleton>
-
-            <Skeleton
-              height={42}
-              radius="sm"
-              visible={isListLoading}
-              width="auto"
-              style={{ overflow: 'unset' }}
-            >
-              <DatePickerInput
-                type="range"
-                size="md"
-                placeholder="Pick date"
-                value={filterDate}
-                onChange={handleFilter}
-              />
-            </Skeleton>
           </Group>
-
         </Group>
-
         {isListLoading && (
           <>
             {[1, 2, 3].map((item) => (
@@ -220,9 +184,9 @@ const Gallery: NextPage = () => {
                   />
                   <Box sx={[{ display: 'flex', justifyContent: 'space-between' }]}>
                     <Text>
-                      {`${el.raiting ? el.raiting : 'No one'} likes this photo`}
+                      {`${el.raiting ? (el.raiting + (likes.find((like) => like.id === el._id)?.raiting || 0)) : 'No one'} likes this photo`}
                     </Text>
-                    <IconHeart color={likes.find((like) => like === el._id) ? 'red' : 'gray'} cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! })} />
+                    <IconHeart color={likes.find((like) => like.id === el._id) ? 'red' : 'gray'} cursor="pointer" onClick={() => handleLike({ _id: el._id, raiting: el.raiting! })} />
                   </Box>
                 </Box>
               </Grid.Col>
